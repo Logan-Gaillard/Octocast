@@ -1,13 +1,12 @@
 # IMPORTANT
-Actuellement je suis dubitatif en rapport de l'utilisation avec SDL 
-Car j'aurais bien pu choisir OpenGL qui est beaucoup plus utilisé et plus facile à gérer    
-Je pense déjà en premier lieu à l'intégration des fonctionnalités   
-Et de toute façon, OpenGL intègre lui-même SDL    
-Je pense que je vais switcher mon projet vers OpenGL, ce qui va me permettre de faire des graphiques nettement plus classes et optimisés    
-Et SDL en lui-même pourra gérer les contrôleurs (Manette, Clavier/souris, etc...)   
+Actuellement je suis dubitatif en rapport de l'utilisation avec SDL.  
+Car j'aurais bien pu choisir OpenGL qui est beaucoup plus utilisé et plus facile à gérer  
+Je pense déjà en premier lieu à l'intégration des fonctionnalités et OpenGL intègre lui-même SDL  
+Je pense que je vais plutôt important dans mon projet OpenGL, ce qui va me permettre également gagner du temps et d'optimisations.    
+Et j'utiliserai le SDL intégré pour gérer les contrôleurs (Manettes, Claviers/souris, etc...)  
 
-D'ailleurs, j'ai remarqué que SDL supporte très bien les contrôleurs Nintendo Switch, ça sera l'occasion de tester cela avec OpenGL   
-Car parti pour tout reswitcher et changer de docs 🤡    
+D'ailleurs, j'ai remarqué que SDL supporte très bien les contrôleurs Nintendo Switch, ça sera l'occasion de tester.  
+Aller, c'est parti pour tout changer re se relire des docs 🤡  
 
 
 # Octoray
