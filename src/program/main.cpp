@@ -18,6 +18,14 @@ SDL_Surface *screen = NULL;
 SDL_Surface *background = NULL;
 SDL_Surface *message = NULL;
 
+//Police d'écriture
+TTF_Font *font;
+
+SDL_Event event;
+
+//Couleur de la police
+SDL_Color textColor = {255, 255, 255};
+
 //Cette fonction charge une image depuis un fichier
 SDL_Surface *load_image_png(const string& filename) {
   // L'image chargée
@@ -67,6 +75,10 @@ bool init(){
     return false;
   }
 
+  if(TTF_Init() == -1){
+    return false;
+  }
+
   //On met le titre de la fenetre
   SDL_SetWindowTitle(window, "Octoray");
 
@@ -85,10 +97,11 @@ bool load_files(){
     return false;
   }
 
-  message = load_image_png("./message.png");
+  //On charge la police d'écriture
+  font = TTF_OpenFont("./Roboto.ttf", 40);
 
-  //Si il y a une erreur avec le message
-  if(message == NULL){
+  //Si il y a une erreur avec la police
+  if(font == NULL){
     return false;
   }
 
@@ -99,6 +112,8 @@ void clean_up(){
   //On libère la surface de l'écran
   SDL_FreeSurface(background);
   SDL_FreeSurface(message);
+  
+  TTF_CloseFont(font);
 
   //On détruit la fenetre
   SDL_DestroyWindow(window);
@@ -113,28 +128,37 @@ int WinMain(int argc, char* argv[])
 int main(int argc, char* argv[])
 #endif
 {
-  std::cout << "Hello, World!" << std::endl;
+  std::cout << "Lancement..." << std::endl;
+  bool exit = false;
+
   if(init() == false){
-    std::cout << "Erreur d'écran" << std::endl;
+    std::cout << "Erreur lors que l'initialisation de SDL" << std::endl;
     return 1;
   }
 
   //chargement des fichiers
   if(load_files() == false){
-    std::cout << "Erreur de chargement des fichiers" << std::endl;
+    std::cout << "Erreurs lors du chargement des fichiers" << std::endl;
+    return 1;
+  }
+
+
+  message = TTF_RenderUTF8_Solid(font, "OctoRay", textColor);
+  
+  //S'il y a une erreur dans l'affichage du texte
+  if(message == NULL){
+    std::cout << "Erreurs lors de l'affichage du texte" << std::endl;
     return 1;
   }
 
   //On applique l'image de fond
   apply_surface(0, 0, background, screen);
-  apply_surface(220, 200, message, screen);
+  apply_surface(240, 200, message, screen);
 
   //Mise à jour de l'écran
   SDL_UpdateWindowSurface(window);
 
-  while(true){
-    SDL_Event event;
-
+  while(true){   
     //On attend un évènement
     SDL_WaitEvent(&event);
 
