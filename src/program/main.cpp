@@ -6,6 +6,7 @@
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
+#include <cstddef>
 #include <iostream>
 
 #include "program/main.h"
@@ -17,6 +18,9 @@ SDL_Window* window = NULL;
 SDL_Surface *screen = NULL;
 SDL_Surface *background = NULL;
 SDL_Surface *message = NULL;
+SDL_Surface *message2 = NULL;
+
+SDL_Surface *kUp = NULL, *kDown = NULL, *kLeft = NULL, *kRight = NULL;
 
 //Police d'écriture
 TTF_Font *font;
@@ -112,6 +116,12 @@ void clean_up(){
   //On libère la surface de l'écran
   SDL_FreeSurface(background);
   SDL_FreeSurface(message);
+  SDL_FreeSurface(message2);
+
+  SDL_FreeSurface( kUp );
+  SDL_FreeSurface( kDown );
+  SDL_FreeSurface(kLeft);
+  SDL_FreeSurface(kRight);
   
   TTF_CloseFont(font);
 
@@ -142,21 +152,17 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  message = TTF_RenderText_Solid( font, "OctoRay.", textColor );
+  kUp = TTF_RenderText_Solid( font, "Haut a ete pressee.", textColor );
+  kDown = TTF_RenderText_Solid( font, "Bas a ete pressee.", textColor );
+  kLeft = TTF_RenderText_Solid( font, "Gauche a ete pressee.", textColor );
+  kRight = TTF_RenderText_Solid( font, "Droite a ete pressee.", textColor );
 
-  message = TTF_RenderUTF8_Solid(font, "OctoRay", textColor);
-  
-  //S'il y a une erreur dans l'affichage du texte
-  if(message == NULL){
-    std::cout << "Erreurs lors de l'affichage du texte" << std::endl;
+  if(message==NULL || kUp==NULL || kDown==NULL || kLeft==NULL || kRight==NULL){
+    std::cout << "Erreurs lors de l'écriture" << std::endl;
     return 1;
   }
-
-  //On applique l'image de fond
-  apply_surface(0, 0, background, screen);
-  apply_surface(240, 200, message, screen);
-
-  //Mise à jour de l'écran
-  SDL_UpdateWindowSurface(window);
+  
 
   while(true){   
     //On attend un évènement
@@ -165,7 +171,34 @@ int main(int argc, char* argv[])
     //Si l'évènement est de type QUIT
     if(event.type == SDL_QUIT){
       break;
+    }else if(event.type == SDL_KEYDOWN){
+      std::cout << "Touche pressée" << event.key.keysym.sym << std::endl;
+      switch(event.key.keysym.sym){
+        case SDLK_UP:
+          message2 = kUp;
+          break;
+        case SDLK_DOWN:
+          message2 = kDown;
+          break;
+        case SDLK_LEFT:
+          message2 = kLeft;
+          break;
+        case SDLK_RIGHT:
+          message2 = kRight;
+          break;
+      }
     }
+
+    apply_surface(0, 0, background, screen);
+    apply_surface(( SCREEN_WIDTH - message->w ) /2, ( SCREEN_HEIGHT - message->h ) /2, message, screen);
+
+    if(message2 != NULL){
+      apply_surface(( SCREEN_WIDTH - message2->w ) /2, 250, message2, screen);
+      message2 = NULL;
+    }
+
+    //Mise à jour de l'écran
+    SDL_UpdateWindowSurface(window);
   }
 
   clean_up();
