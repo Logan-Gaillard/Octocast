@@ -1,27 +1,19 @@
-# Définir la cible par défaut
 .DEFAULT_GOAL := linux
 
-# Dossiers
-BUILD_DIR = builds
+builds:
+	mkdir -p builds
 
-# Options de compilation
-CFLAGS = -I includes -I includes/program -I includes/images
+mkb_linux:
+	sudo cmake -S . -B builds/linux
 
-# Source
-SRCS = src/program/main.cpp
+mkb_windows:
+	sudo cmake -S . -B builds/windows -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
 
-# Règle pour créer le dossier builds si nécessaire
-$(BUILD_DIR):
-	@mkdir -p $(BUILD_DIR)
+linux : mkb_linux
+	sudo cmake --build builds/linux
 
-# Règle par défaut pour Linux
-linux: $(BUILD_DIR)
-	g++ $(CFLAGS) -o $(BUILD_DIR)/main $(SRCS) `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_ttf -static-libgcc -static-libstdc++
+windows : mkb_windows
+	sudo cmake --build builds/windows
 
-# Règle pour Windows
-windows: $(BUILD_DIR)
-	x86_64-w64-mingw32-g++ $(CFLAGS) -o $(BUILD_DIR)/main.exe $(SRCS) -lSDL2 -lSDL2main -lSDL2_image -lSDL2_ttf -static-libgcc -static-libstdc++ -mwindows
-
-# Règle pour tout nettoyer
 clean:
-	rm -rf $(BUILD_DIR)
+	sudo rm -rf builds
