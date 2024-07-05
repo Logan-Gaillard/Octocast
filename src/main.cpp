@@ -7,7 +7,7 @@ void display() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutCreateWindow("OpenGL Setup Test");
+    glutCreateWindow("Octoray");
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;
